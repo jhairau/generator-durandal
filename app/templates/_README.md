@@ -80,7 +80,7 @@ Assets (images, txt, xml, json, etc.) have to be placed into __assets/__ folder.
 
 #### Styles
 
-Styles (CSS, LESS) have to be placed into __css/__ folder. 
+Styles (CSS, LESS, SASS) have to be placed into __css/__ folder. 
 
 #### Scripts (modules)
 

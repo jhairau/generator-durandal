@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title><%= appname %></title>
@@ -15,7 +15,7 @@
     <link rel="apple-touch-icon" href="bower_components/durandal/img/icon.png" />
 
     <!-- build:style libs -->
-<% if (features.less) { %>
+<% if (features.less || features.sass) { %>
     <% if (features.bootstrap) { %><link rel="stylesheet" href="css/bootstrap.css" /><% } %>
     <% if (features.fontawesome) { %><link rel="stylesheet" href="css/font-awesome.css" /><% } %>
 <% } else { %>

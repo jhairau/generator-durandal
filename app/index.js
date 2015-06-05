@@ -60,6 +60,11 @@ DurandalGenerator.prototype.askFor = function askFor() {
                     name: "LESS",
                     value: "less",
                     checked: true
+                },
+                {
+                    name: "SASS",
+                    value: "sass",
+                    checked: true
                 }
             ]
         }
@@ -74,7 +79,8 @@ DurandalGenerator.prototype.askFor = function askFor() {
             bootstrap: props.features.indexOf("bootstrap") !== -1,
             fontawesome: props.features.indexOf("fontawesome") !== -1,
             modernizr: props.features.indexOf("modernizr") !== -1,
-            less: props.features.indexOf("less") !== -1
+            less: props.features.indexOf("less") !== -1,
+            sass: props.features.indexOf("sass") !== -1
         };
 
         done();
@@ -104,6 +110,8 @@ DurandalGenerator.prototype.starter = function starter() {
 
     if (this.features.less) {
         this.copy('app.less', 'css/app.less');
+    } else if (this.features.sass) {
+        this.copy('app.sass', 'css/app.sass');
     }
     else {
         this.copy('app.css', 'css/app.css');

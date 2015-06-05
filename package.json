@@ -1,25 +1,27 @@
 {
   "name": "generator-durandal",
   "version": "0.1.5",
-  "description": "Complete Yeoman generator for Durandal with subgenerators",
+  "description": "Complete Yeoman generator for Durandal with subgenerators and SASS support",
   "keywords": [
     "yeoman-generator",
 	"durandal",
 	"requirejs",
 	"knockoutjs",
-	"jquery"
+	"jquery",
+    "bootstrap",
+    "sass"
   ],
-  "homepage": "https://github.com/spatools/generator-durandal",
-  "bugs": "https://github.com/spatools/generator-durandal/issues",
+  "homepage": "https://github.com/jhairau/generator-durandal-sass",
+  "bugs": "https://github.com/jhairau/generator-durandal-sass",
   "author": {
-    "name": "SPA Tools",
-    "email": "spa@somatic.fr",
-    "url": "https://github.com/spatools"
+    "name": "Johnathan Hair",
+    "email": "johnathan.hair.au@gmail.com",
+    "url": "https://github.com/jhairau"
   },
   "main": "app/index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/spatools/generator-durandal.git"
+    "url": "git://github.com/jhairau/generator-durandal-sass.git"
   },
   "scripts": {
     "test": "mocha"

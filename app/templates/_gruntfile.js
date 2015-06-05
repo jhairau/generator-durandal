@@ -1,4 +1,4 @@
-﻿// Generated on <%= (new Date).toISOString().split('T')[0] %> using <%= pkg.name %> <%= pkg.version %>
+// Generated on <%= (new Date).toISOString().split('T')[0] %> using <%= pkg.name %> <%= pkg.version %>
 'use strict';
 
 module.exports = function (grunt) {
@@ -116,6 +116,56 @@ module.exports = function (grunt) {
                 ]
             }
         },
+<% } else if(features.sass) { %>
+     // Build less files into css ones
+        sass: {
+            release: {
+                options: {
+                    <% if (features.bootstrap) { %>paths: ['bower_components/bootstrap/sass/'],<% } %>
+                    cleancss: true
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%%= paths.css %>/',
+                        src: '*.sass, *.scss',
+                        dest: '<%%= paths.build %>/<%%= paths.css %>/',
+                        ext: '.css'
+                    },
+                    <% if (features.bootstrap) { %> {
+                        src: 'bower_components/bootstrap/sass/bootstrap.sass',
+                        dest: '<%%= paths.temp %>/<%%= paths.css %>/bootstrap.css'
+                    }, <% } %>
+                    <% if (features.fontawesome) { %> {
+                        src: 'bower_components/font-awesome/sass/font-awesome.sass',
+                        dest: '<%%= paths.temp %>/<%%= paths.css %>/font-awesome.css'
+                    } <% } %>
+                ]
+            },
+            watch: {
+                options: {
+                    <% if (features.bootstrap) { %>paths: ['bower_components/bootstrap/sass/'],<% } %>
+                    sourceMap: true
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%%= paths.css %>/',
+                        src: '*.sass, *.scss',
+                        dest: '<%%= paths.temp %>/<%%= paths.css %>/',
+                        ext: '.css'
+                    },
+                    <% if (features.bootstrap) { %>{
+                        src: 'bower_components/bootstrap/sass/bootstrap.sass',
+                        dest: '<%%= paths.temp %>/<%%= paths.css %>/bootstrap.css'
+                    },<% } %>
+                    <% if (features.fontawesome) { %>{
+                        src: 'bower_components/font-awesome/sass/font-awesome.sass',
+                        dest: '<%%= paths.temp %>/<%%= paths.css %>/font-awesome.css'
+                    }<% } %>
+                ]
+            }
+        },
 <% } else { %>
         cssmin: {
             release: {
@@ -154,10 +204,10 @@ module.exports = function (grunt) {
             },
             styles: {
                 src: [
-                    <% if (features.less && features.bootstrap) { %>'<%%= paths.temp %>/<%%= paths.css %>/bootstrap.css',<% } %>
-                    <% if (features.less && features.fontawesome) { %>'<%%= paths.temp %>/<%%= paths.css %>/font-awesome.css',<% } %>
-                    <% if (!features.less && features.bootstrap) { %>'bower_components/bootstrap/dist/css/bootstrap.css',<% } %>
-                    <% if (!features.less && features.fontawesome) { %>'bower_components/font-awesome/css/font-awesome.css',<% } %>
+                    <% if (features.sass || features.less && features.bootstrap) { %>'<%%= paths.temp %>/<%%= paths.css %>/bootstrap.css',<% } %>
+                    <% if (features.sass || features.less && features.fontawesome) { %>'<%%= paths.temp %>/<%%= paths.css %>/font-awesome.css',<% } %>
+                    <% if (!features.less && !features.sass && features.bootstrap) { %>'bower_components/bootstrap/dist/css/bootstrap.css',<% } %>
+                    <% if (!features.less && !features.sass && features.fontawesome) { %>'bower_components/font-awesome/css/font-awesome.css',<% } %>
                     'bower_components/durandal/css/durandal.css'
                 ],
                 dest: '<%%= paths.build %>/<%%= paths.css %>/libs.css'
@@ -168,13 +218,13 @@ module.exports = function (grunt) {
         copy: {
             watch: {
                 files: [
-                    <% if (features.bootstrap && features.less) { %>{
+                    <% if (features.bootstrap && (features.less || features.sass)) { %>{
                         expand: true,
                         cwd: 'bower_components/bootstrap/dist/',
                         src: 'fonts/*.*',
                         dest: '<%%= paths.temp %>/'
                     },<% } %>
-                    <% if (features.fontawesome && features.less) { %>{
+                    <% if (features.fontawesome && (features.less || features.sass)) { %>{
                         expand: true,
                         cwd: 'bower_components/font-awesome/',
                         src: 'fonts/*.*',
@@ -195,13 +245,13 @@ module.exports = function (grunt) {
                             '!<%%= paths.assets %>/**/*.{gif,jpeg,jpg,png,svg}'
                         ]
                     },
-                    <% if (features.bootstrap && features.less) { %>{
+                    <% if (features.bootstrap && (features.less || features.sass)) { %>{
                         expand: true,
                         cwd: 'bower_components/bootstrap/dist/',
                         src: 'fonts/*.*',
                         dest: '<%%= paths.build %>'
                     },<% } %>
-                    <% if (features.fontawesome && features.less) { %>{
+                    <% if (features.fontawesome && (features.less || features.sass)) { %>{
                         expand: true,
                         cwd: 'bower_components/font-awesome/',
                         src: 'fonts/*.*',
@@ -324,6 +374,15 @@ module.exports = function (grunt) {
                 ],
                 tasks: ['less:watch', 'autoprefixer:watch']
             },
+<% else if (features.sass) { %>
+            sass: {
+                files: [
+                    '<%%= paths.css %>/*.less',
+                    <% if (features.bootstrap) { %>'bower_components/bootstrap/sass/*.sass',<% } %>
+                    <% if (features.fontawesome) { %>'bower_components/font-awesome/font-awesome.sass',<% } %>
+                ],
+                tasks: ['sass:watch', 'autoprefixer:watch']
+            },
 <% } else { %>
             styles: {
                 files: ['<%%= paths.css %>/*.css'],
@@ -397,12 +456,14 @@ module.exports = function (grunt) {
         concurrent: {
             server: [
                 <% if (features.less) { %>'less:watch',
+                <% else if (features.sass) { %>'sass:watch',
                 <% } else { %>'copy:styles',<% } %>
                 'copy:watch'
             ],
             release: [
                 'durandal',
                 <% if (features.less) { %>'less:release',
+                <% else if (features.sass) { %>'sass:release',
                 <% } else { %>'cssmin:release',<% } %>
                 'copy:release',
                 'imagemin',
